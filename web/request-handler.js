@@ -25,10 +25,8 @@ var types = {
 // GET at any other than root path - checks for file
       fs.readFile(archive.paths.archivedSites+parsedUrl.path, function(err, data){
         if(err){
-// Returns 404 if website file is not in archives
           res.writeHead(404, headers);
           res.end('nice try!')
-          // throw err;
           return;
         }
 // Serves up archived website file
@@ -37,22 +35,32 @@ var types = {
       });
     }
   },
+
+
   POST: function(req,res) {
-    var parsedUrl = url.parse(req.url);
-    fs.readFile(archive.paths.archivedSites+parsedUrl.path, function(err, data){
-//REQ._POSTDATA.URL NEEDS TO BE CHANGED TO ACTUAL REQUEST DATA
-      if(err){
-        fs.appendFile(archive.paths.list, req._postData.url + '\n', function (err) {
-          if(err){throw err;}
-        });
-        res.writeHead(302, headers);
-        res.end('nice try!')
-        // throw err;
-        return;
-      }
-      res.writeHead(200, headers);
-      res.end(data);
+    // var parsedUrl = url.parse(req.url);
+    // console.log(parsedUrl)
+    req.on('data', function(chunk) {
+      var url = chunk.toString().substring(4)
+      fs.readFile(archive.paths.archivedSites + url, function(err, data){
+        if(err){
+          fs.appendFile(archive.paths.list, url + '\n', function (err) {
+            if(err){throw err;}
+          });
+          res.writeHead(302, headers);
+          fs.readFile(archive.paths.loading, function(err, data){
+            if(err){throw err;}
+            res.end(data);
+          });
+
+          // throw err;
+          return;
+        }
+        res.writeHead(200, headers);
+        res.end(data);
+      });
     });
+
   },
   OPTIONS: function(req,res) {
 
