@@ -3,6 +3,8 @@ var archive = require('../helpers/archive-helpers');
 var url = require('url');
 var helpers = require('./http-helpers')
 var fs = require('fs');
+var http = require('http-request');
+
 // require more modules/folders here!
 var headers = helpers.headers
 
@@ -44,7 +46,7 @@ var types = {
       var url = chunk.toString().substring(4)
       fs.readFile(archive.paths.archivedSites + url, function(err, data){
         if(err){
-          fs.appendFile(archive.paths.list, url + '\n', function (err) {
+          fs.appendFile(archive.paths.siteQ, url + '\n', function (err) {
             if(err){throw err;}
           });
           res.writeHead(302, headers);

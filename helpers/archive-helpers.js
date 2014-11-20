@@ -12,9 +12,9 @@ var _ = require('underscore');
 paths = exports.paths = {
   'siteAssets' : path.join(__dirname, '../web/public'),
   'archivedSites' : path.join(__dirname, '../archives/sites/'),
-  'list' : path.join(__dirname, '../archives/sites.txt'),
   'index': path.join(__dirname, '../web/public/index.html'),
-  'loading': path.join(__dirname, '../web/public/loading.html')
+  'loading': path.join(__dirname, '../web/public/loading.html'),
+  'siteQ': path.join(__dirname, '../archives/siteQ.txt'),
 };
 
 // Used for stubbing paths for jasmine tests, do not modify
@@ -27,8 +27,8 @@ exports.initialize = function(pathsObj){
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function(callback){
-  fs.readFile(paths.list, function(err, data){
+exports.readListOfUrls = function(file, callback){
+  fs.readFile(file, function(err, data){
     if(err){throw err;}
     callback(data.toString().split('\n'));
   });
